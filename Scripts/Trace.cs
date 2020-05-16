@@ -113,7 +113,7 @@ namespace Assets.Scripts
             i = Mathf.Clamp(i, 0, nXCells - 1);
             j = Mathf.Clamp(j, 0, nZCells - 1);
             danger[i, j] += value;
-            danger[i, j] = Mathf.Min(food[i, j], 10);
+            danger[i, j] = Mathf.Min(danger[i, j], 10);
         }
 
         public void OnDrawGizmosSelected()
