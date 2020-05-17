@@ -42,10 +42,6 @@ namespace Assets.Scripts.CreatureBehaviour
             foreach (var neighbor in neighbors)
                 Debug.DrawLine(transform.position, neighbor.transform.position, Color.red);
             dangerTrace = 2 * neighbors.Count;
-            if (neighbors.Count != 0)
-            {
-                lastDanger = 10;
-            }
             //update the food
             var plants = creature.Sensor.SensePlants(creature);
             GameObject closestFood = plants.Count == 0 ? null : plants[0];
@@ -59,13 +55,23 @@ namespace Assets.Scripts.CreatureBehaviour
                 var foodCell = trace.GetCellPos(food.transform.position);
             }
             foodTrace = plants.Count;
-
-            if (plants.Count == 0)
+            if (plants.Count != 0)
+            {
+                lastFood = foodTrace;
                 dangerTrace += 0.5f;
+            }
+            else
+                lastFood = rememberanceFactor * lastFood;
+
+            if (neighbors.Count != 0)
+            {
+                lastDanger = dangerTrace;
+            }
+            else
+                lastDanger = rememberanceFactor * lastDanger + (1 - rememberanceFactor) * dangerTrace;
 
 
-            lastDanger = rememberanceFactor * lastDanger + (1 - rememberanceFactor) * dangerTrace;
-            lastFood = rememberanceFactor * lastFood + (1 - rememberanceFactor) * foodTrace;
+
 
             trace.AddFoodTrace(myCell.Item1, myCell.Item2, lastFood);
             trace.AddDangerTrace(myCell.Item1, myCell.Item2, lastDanger);
@@ -108,12 +114,12 @@ namespace Assets.Scripts.CreatureBehaviour
                         Vector3 pos = trace.GetVectorPos(cellx, cellz);
                         if (explore && trace.food[cellx, cellz] < 0.1f && trace.danger[cellx, cellz] < 0.1f)
                         {
-                            gCenter += (pos - transform.position);
+                            gCenter += (pos - transform.position).normalized;
                             count++;
                         }
                         else
                         {
-                            gCenter += (pos - transform.position) * (trace.food[cellx, cellz] - trace.danger[cellx, cellz]);
+                            gCenter += (pos - transform.position).normalized * (trace.food[cellx, cellz] - trace.danger[cellx, cellz]);
                             count++;
                         }
                     }
