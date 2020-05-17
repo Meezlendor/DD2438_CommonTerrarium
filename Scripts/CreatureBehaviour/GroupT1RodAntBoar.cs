@@ -126,19 +126,6 @@ namespace Assets.Scripts.CreatureBehaviour
 
         public override void updateStats()
         {
-            float totalEnergy = 0;
-            int totalSpecies = 0;
-            foreach (var animal in GameObject.FindGameObjectsWithTag("herbivore"))
-            {
-                if (animal.GetComponent<CreatureAI>().specieID == this.specieID)
-                {
-                    totalSpecies++;
-                    totalEnergy += animal.GetComponent<Creature>().Energy;
-                }
-            }
-            var text = GameObject.Find("Text");
-            if (text != null)
-                text.GetComponent<Text>().text = $"Count :{totalSpecies}, avg Energy : {totalEnergy / totalSpecies}";
         }
     }
 }

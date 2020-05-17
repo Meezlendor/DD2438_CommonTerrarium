@@ -68,20 +68,17 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            /*elapsedTime += Time.deltaTime;
-            if (elapsedTime > updateFrequency)
-            {*/
+
             float factor = Mathf.Pow(1 - evaporation, Time.deltaTime);
-                for (int i = 0; i < food.GetLength(0); i++)
+            for (int i = 0; i < food.GetLength(0); i++)
+            {
+                for (int j = 0; j < food.GetLength(1); j++)
                 {
-                    for (int j = 0; j < food.GetLength(1); j++)
-                    {
-                        food[i, j] = factor * food[i, j];
-                        danger[i, j] = factor * danger[i, j];
-                    }
+                    food[i, j] = factor * food[i, j];
+                    danger[i, j] = factor * danger[i, j];
                 }
-                /*elapsedTime = 0;
-            }*/
+            }
+
         }
 
         public Vector3 GetVectorPos(int i, int j)
@@ -95,7 +92,7 @@ namespace Assets.Scripts
         {
             int i = (int)Mathf.Lerp(0, nXCells, (v.x-xMin) / (xMax - xMin));
             int j = (int)Mathf.Lerp(0, nZCells, (v.z - zMin) / (zMax - zMin));
-            return new Tuple<int, int>(i, j);
+            return new Tuple<int, int>(Mathf.Clamp(i,0,nXCells-1), Mathf.Clamp(j,0,nZCells-1));
         }
 
         public void AddFoodTrace(int i, int j, float value)
@@ -127,7 +124,7 @@ namespace Assets.Scripts
                         continue;
                     }
                     var pos = GetVectorPos(i, j);
-                    Gizmos.color = new Color(Mathf.Clamp(danger[i, j], 0f,1f), Mathf.Clamp(food[i,j],0f,1f), 0f);
+                    Gizmos.color = new Color(danger[i,j]/10, food[i,j]/10, 0f);
                     Gizmos.DrawSphere(pos, 2);
                 }
             }
