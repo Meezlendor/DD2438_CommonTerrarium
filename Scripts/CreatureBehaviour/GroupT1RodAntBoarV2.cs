@@ -55,20 +55,12 @@ namespace Assets.Scripts.CreatureBehaviour
                 var foodCell = trace.GetCellPos(food.transform.position);
             }
             foodTrace = plants.Count;
-            if (plants.Count != 0)
-            {
-                lastFood = foodTrace;
+            if (plants.Count == 0)
                 dangerTrace += 0.5f;
-            }
-            else
-                lastFood = rememberanceFactor * lastFood;
-
             if (neighbors.Count != 0)
-            {
                 lastDanger = dangerTrace;
-            }
-            else
-                lastDanger = rememberanceFactor * lastDanger + (1 - rememberanceFactor) * dangerTrace;
+            lastFood = rememberanceFactor * lastFood+(1-rememberanceFactor)*foodTrace;
+            lastDanger = rememberanceFactor * lastDanger + (1 - rememberanceFactor) * dangerTrace;
 
 
 
