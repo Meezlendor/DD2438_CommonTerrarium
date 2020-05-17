@@ -30,7 +30,7 @@ public class Creature : MonoBehaviour
     /// </summary>
     public ICostFunction EnergyManager { get; private set; }
 
-    public IReproduction Reproducer { get; private set; }
+    public IReproduction Reproducer;
 
 
     /// <summary>
@@ -64,12 +64,13 @@ public class Creature : MonoBehaviour
     /// </summary>
     public float MaxEnergy { get; set; }
 
+    /// NEW
     /// <summary>
-    /// The generation of the creature. Starts from 0.
+    /// The generation of the creature.
     /// </summary>
     public int Generation { get; set; }
 
-
+   
     /// ----- ATTRIBUTES
 
     [SerializeField]
@@ -85,15 +86,14 @@ public class Creature : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         //Define the reproduction strategy
-        Reproducer = new AsexualMutationDuplication();
+        Reproducer = new AsexualCommonDuplication();
         //Define the cost function for the energy
         EnergyManager = new CostFunction();
 
-        if (Time.frameCount < 3)
-        {
+        if (Time.frameCount < 3) { 
             Debug.Log($"Instantiating the creature !, initial setup {initialSize}, {initialRegime},{initialMaxSpeed},{initialMaxEnergy}");
             CreatureRegime = initialRegime;
             MaxSpeed = initialMaxSpeed;
@@ -101,10 +101,6 @@ public class Creature : MonoBehaviour
             Size = initialSize;
             Sensor = new CircularSensor(initialSensingRadius);
             Energy = MaxEnergy;
-        }
-        else
-        {
-            // Energy = EnergyManager.ReproductionCost(this);
         }
     }
 
@@ -129,7 +125,7 @@ public class Creature : MonoBehaviour
     {
         speed = Mathf.Clamp(speed, 0, 1);
         direction.y = 0;
-        Vector3 speedVector = direction.normalized * speed * MaxSpeed;
+        Vector3 speedVector= direction.normalized * speed * MaxSpeed;
         transform.position += speedVector * Time.deltaTime;
 
         // Rotate models
@@ -162,16 +158,16 @@ public class Creature : MonoBehaviour
         if (Energy <= energyCost)
             return;
         //Instantiate the baby
-        Creature baby = Instantiate<Creature>(this, getClosestFreePoint(transform.position), transform.rotation);
+        Creature baby = Instantiate<Creature>(this, getClosestFreePoint(transform.position),transform.rotation);
         baby.name = this.name;
         //Modify its characteristics
-        this.Reproducer.CreateBaby(this, baby);
+        this.Reproducer.CreateBaby(this,ref baby);
         // The parent loses energy and gives it to the child
         baby.Energy = energyCost;
 
         Energy -= energyCost;
 
-        Debug.Log("new baby size=" + baby.Size + " speed=" + baby.MaxSpeed + " sensing=" + baby.Sensor.SensingRadius + " energy=" + baby.Energy);
+        Debug.Log("new baby size=" + baby.Size + " speed=" + baby.MaxSpeed+ " sensing="+baby.Sensor.SensingRadius + " energy=" + baby.Energy + " parent energy=" + Energy);
     }
 
     Vector3 getClosestFreePoint(Vector3 point)

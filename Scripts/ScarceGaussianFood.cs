@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    class GuassianFoodSpawner : IFoodSpawner
+    class ScarceGaussianFood : IFoodSpawner
     {
         private float xMin, xMax, zMin, zMax;
         private float time;
-        public float nr_guassians = 10;
-        public float std = 20;
+        public float nr_guassians = 20;
+        public float std = 40;
         private List<(float, float)> centers;
-        public GuassianFoodSpawner(Vector3 position, float variance)
+        public ScarceGaussianFood(Vector3 position, float variance)
         {
             this.xMin = position.x - variance;
             this.xMax = position.x + variance;
@@ -35,7 +35,7 @@ namespace Assets.Scripts
         public Vector3 SpawnFood(float deltaTime, GameObject[] otherPlants)
         {
             time += deltaTime;
-            if (time > 0.1)
+            if (time > 0.1f)
             {
                 time = 0;
 

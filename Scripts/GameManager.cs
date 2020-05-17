@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +12,14 @@ namespace Assets.Scripts
 
         public float edibleRadius;
         public TerrainManager terrainManager;
-        public CreatureAI[] species;
         public GameObject[] spawnAreas;
-        public int nIndividualsPerSpecies;
+        public CreatureAI[] species;
+        public int[] nIndividualsPerSpecies;    // The starting number of agents for each species (to be set via Unity inspector)
+
+        // DEBUG
+        int nHerbioures;
+        int nCarnivore;
+        float time=0;
 
         public void Awake()
         {
@@ -23,22 +28,28 @@ namespace Assets.Scripts
 
         public void Update()
         {
+            GameObject[] herbivores = GameObject.FindGameObjectsWithTag("herbivore");
+            GameObject[] carnivores = GameObject.FindGameObjectsWithTag("carnivore");
+
+            nCarnivore = carnivores.Length;
+            nHerbioures = herbivores.Length;
+
             //satisfy the herbivores
-            foreach(var animal in GameObject.FindGameObjectsWithTag("herbivore"))
+            foreach (var animal in herbivores)
             {
                 Creature c = animal.GetComponent<Creature>();
                 List<GameObject> animalFood;
-                
+
                 // Herbivores eat plants
                 animalFood = c.Sensor.SensePlants(c);
 
                 //the closest within the edible radius can be eaten
-                GameObject closestFood=null;
+                GameObject closestFood =null;
                 float distance = float.MaxValue;
                 foreach(var foodPiece in animalFood)
                 {
                     float localDistance = Vector3.Distance(animal.transform.position, foodPiece.transform.position);
-                    if (localDistance<distance && localDistance < edibleRadius)
+                    if (localDistance<distance && localDistance < edibleRadius * Mathf.Sqrt(c.Size))
                     {
                         distance = localDistance;
                         closestFood = foodPiece;
@@ -47,13 +58,12 @@ namespace Assets.Scripts
                 if (closestFood != null)
                 {
                     animal.GetComponent<CreatureAI>().OnAccessibleFood(closestFood);
-                    Debug.Log($"Calling the eating method (H)!");
+                    //Debug.Log($"Calling the eating method !");
                 }
-
             }
 
             //same with carnivores
-            foreach (var animal in GameObject.FindGameObjectsWithTag("carnivore"))
+            foreach (var animal in carnivores)
             {
                 Creature c = animal.GetComponent<Creature>();
                 List<GameObject> animalFood;
@@ -77,15 +87,20 @@ namespace Assets.Scripts
                 if (closestFood != null)
                 {
                     animal.GetComponent<CreatureAI>().OnAccessibleFood(closestFood);
-                    Debug.Log($"Calling the eating method (C)!");
+                    Debug.Log($"Calling the eating method !");
                 }
-
             }
 
-            // measure stats of the species if you have overritten updateStats in your DragonAI
-            foreach (CreatureAI specie in species)
+
+            // once per second call updateStats on all species
+            time += Time.deltaTime;
+            if (time > 1)
             {
-                specie.updateStats();
+                foreach (CreatureAI specie in species)
+                {
+                    specie.updateStats();
+                }
+                time = 0;
             }
         }
 
@@ -117,21 +132,27 @@ namespace Assets.Scripts
         private void SpawnCreatures()
         {
             //int n = species.Length * nIndividualsPerSpecies;
-            int n = nIndividualsPerSpecies;
 
             for (int k = 0; k < species.Length; k++)
             {
-                species[k].specieID = k;
-                for (int i = 0; i < nIndividualsPerSpecies; i++)
+                int n = nIndividualsPerSpecies[k];
+                species[k].specieID = k; // set specieID
+
+                for (int i = 0; i < n; i++)
                 {
                     Debug.Log($"Creating species {k} - creature {i}");
                     //float angle = (k * nIndividualsPerSpecies + i) * 360f / n;
-                    float angle = (nIndividualsPerSpecies + i) * 360f / n;
-                    Vector3 position = spawnAreas[k].transform.position + Quaternion.Euler(0, angle, 0f) * Vector3.forward * 50;
-                    position.y = 15f;
+                    float angle = (n + i) * 360f / n;
+
+                    // Random vs Circular spawning
+                    //Vector3 position = spawnAreas[k].transform.position + Quaternion.Euler(0, angle, 0f) * Vector3.forward * 50;
+                    Vector3 position = new Vector3(UnityEngine.Random.Range(-300, 300), 5, UnityEngine.Random.Range(-300, 300));
+
+                    position.y = 5f;
                     Instantiate(species[k], position, new Quaternion(0, angle, 0, 0));
                 }
             }
+
         }
 
         private void DestroyPlants()

@@ -8,27 +8,14 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     /// <summary>
-    /// This class is supposed to be inherit to create your DragonAI or KittyAI.
+    /// This class has to be inherithed by all AnimalAI classes
     /// </summary>
     public class CreatureAI : MonoBehaviour
     {
+        public string specieName;   // The name of the specie (to be set in the prefab)
+        public int specieID;        // The ID of the specie (setted by GameManager)
 
         /// <summary>
-        /// The name of the specie. Is supposed to be the same for all the specimens.
-        /// Should be setted in the prefab of the specie.
-        /// </summary>
-        public string specieName;
-
-        /// <summary>
-        /// The ID of the specie. Is supposed to be the same for all the specimens.
-        /// May be setted by the GameManger when instansiating the creature.
-        /// </summary>
-        public int specieID;
-
-        private Creature creature;
-
-        /// <summary>
-        /// YOU NEED TO OVVERIDE IT IN YOUR DragonAI
         /// This function is called when your creature is within an acceptable
         /// range to eat some food, adapted to your regime of course.
         /// You do not need to necessarily eat it of course.
@@ -39,9 +26,9 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// YOU NEED TO OVVERIDE IT IN YOUR DragonAI
-        /// This function may be called by GameManager to measure the stats of the specie
-        /// as number of speciemens and average size. 
+        /// This function is called once per second and specie by GameManager
+        /// It is implemented in each AnimalAI to update stats of that specie.
+        /// Data are logged csv on a txt file.
         /// </summary>
         public virtual void updateStats()
         {

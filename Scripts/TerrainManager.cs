@@ -15,7 +15,7 @@ namespace Assets.Scripts
 
         public void Start()
         {
-            spawner = new GuassianFoodSpawner(plantSpawn.transform.position, 400);
+            spawner = new ScarceGaussianFood(plantSpawn.transform.position, 400);
             //spawner = new UniformFoodSpawner(0, 200, 0, 200);
         }
 

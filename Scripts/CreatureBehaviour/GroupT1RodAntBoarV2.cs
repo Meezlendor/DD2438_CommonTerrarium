@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,15 @@ namespace Assets.Scripts.CreatureBehaviour
 
         private float lastDanger = 0f, lastFood = 0f;
         public float rememberanceFactor = 0.95f;
+
+        // Specie's stats (shared by all the speciemen)
+        static int nOfSpeciemens;
+        static float avgSize;
+        static float avgSpeed;
+        static float avgSensing;
+        static float avgGeneration;
+        static float avgEnergy;
+
 
         public void Start()
         {
@@ -134,6 +144,41 @@ namespace Assets.Scripts.CreatureBehaviour
 
         public override void updateStats()
         {
+            List<GameObject> agents = GameObject.FindGameObjectsWithTag("carnivore").ToList();
+            agents.AddRange(GameObject.FindGameObjectsWithTag("herbivore").ToList());
+
+            agents = agents.FindAll(c => c.GetComponent<CreatureAI>().specieID == specieID);
+
+            nOfSpeciemens = agents.Count;
+
+            avgSensing = 0;
+            avgSize = 0;
+            avgSpeed = 0;
+            avgGeneration = 0;
+            avgEnergy = 0;
+
+            foreach (GameObject agent in agents)
+            {
+                Creature c = agent.GetComponent<Creature>();
+
+                avgSensing += c.Sensor.SensingRadius;
+                avgSize += c.Size;
+                avgSpeed += c.MaxSpeed;
+                avgGeneration += c.Generation;
+                avgEnergy += c.Energy;
+            }
+
+            avgSensing = avgSensing / (float)nOfSpeciemens;
+            avgEnergy = avgEnergy / (float)nOfSpeciemens;
+            avgSize = avgSize / (float)nOfSpeciemens;
+            avgSpeed = avgSpeed / (float)nOfSpeciemens;
+            avgGeneration = ((float)avgGeneration) / (float)nOfSpeciemens;
+
+            Debug.Log(specieName + " " + nOfSpeciemens + " avgSize=" + avgSize + " avgSensing=" + avgSensing + " avgSpeed=" + avgSpeed + " avgGeneration=" + avgGeneration);
+
+            string[] line = { Time.time.ToString() + ";" + avgSensing.ToString() + ";" + avgEnergy.ToString() + ";" + avgSize.ToString() + ";" + avgSpeed.ToString() + ";" + avgGeneration.ToString() + ";" + nOfSpeciemens.ToString() + ";" };
+            string docPath = Path.GetFullPath("Assets/Logs/");
+            File.AppendAllLines(Path.Combine(docPath, "OutcomesPigT1.csv"), line);
         }
     }
 }

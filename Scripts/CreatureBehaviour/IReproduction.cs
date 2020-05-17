@@ -18,6 +18,6 @@ namespace Assets.Scripts.CreatureBehaviour
         /// </summary>
         /// <param name="parent">The main parent of the newborn</param>
         /// <param name="baby">The baby whose parameters may (or not) be changed</param>
-        void CreateBaby(Creature parent,Creature baby);
+        void CreateBaby(Creature parent,ref Creature baby);
     }
 }
