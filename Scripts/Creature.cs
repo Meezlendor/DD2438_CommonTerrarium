@@ -22,7 +22,7 @@ public class Creature : MonoBehaviour
     /// The Sensor of the creature keeps track of what is surrounding it
     /// Call it when you need to detect something.
     /// </summary>
-    public ISensorV2 Sensor { get; set; }
+    public ISensor Sensor { get; set; }
 
     /// <summary>
     /// The EnergyManager determines the ernergy rewards/loss
@@ -90,7 +90,7 @@ public class Creature : MonoBehaviour
         //Define the reproduction strategy
         Reproducer = new AsexualMutationDuplication();
         //Define the cost function for the energy
-        EnergyManager = new CostFunctionV2();
+        EnergyManager = new CostFunction();
 
         if (Time.frameCount < 3)
         {
@@ -99,7 +99,7 @@ public class Creature : MonoBehaviour
             MaxSpeed = initialMaxSpeed;
             MaxEnergy = initialMaxEnergy;
             Size = initialSize;
-            Sensor = new CircularSensorV2(initialSensingRadius);
+            Sensor = new CircularSensor(initialSensingRadius);
             Energy = MaxEnergy;
         }
         else

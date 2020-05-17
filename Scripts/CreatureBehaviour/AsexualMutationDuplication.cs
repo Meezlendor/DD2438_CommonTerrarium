@@ -21,7 +21,7 @@ namespace Assets.Scripts.CreatureBehaviour
             baby.CreatureRegime = parent.CreatureRegime;
             baby.Size = parent.Size * ( 1 - mutationFactor/2f + (float)rand.NextDouble() * mutationFactor);
             baby.MaxSpeed = parent.MaxSpeed * (1 - mutationFactor / 2f + (float)rand.NextDouble() * mutationFactor);
-            baby.Sensor = new CircularSensorV2(parent.Sensor.SensingRadius * (1 - mutationFactor / 2f + (float)rand.NextDouble() * mutationFactor));
+            baby.Sensor = new CircularSensor(parent.Sensor.SensingRadius * (1 - mutationFactor / 2f + (float)rand.NextDouble() * mutationFactor));
             baby.MaxEnergy = parent.MaxEnergy;
             baby.Generation = parent.Generation + 1;
         }

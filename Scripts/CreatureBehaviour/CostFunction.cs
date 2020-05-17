@@ -13,13 +13,13 @@ namespace Assets.Scripts.CreatureBehaviour
 
         public float LivingCost(Creature creature, float deltaTime)
         {
-            return deltaTime * creature.Size * Mathf.Log(1 + creature.MaxSpeed) + deltaTime * creature.Sensor.SensingRadius;
+            return deltaTime * (creature.Size * Mathf.Log(1 + creature.MaxSpeed) + creature.Sensor.SensingRadius * 0.1f);
         }
 
 
         public float MoveCost(Creature creature, float speed)
         {
-            return creature.Size * Mathf.Pow(speed*0.01f, 2);//FIXME : the current /1000 is a temporal fix
+            return creature.Size * Mathf.Pow(speed, 2) * 0.01f * Time.deltaTime;
         }
 
 
@@ -27,7 +27,7 @@ namespace Assets.Scripts.CreatureBehaviour
         {
             if (regime == Creature.Regime.CARNIVORE)
             {
-                return 2*food.GetComponent<Creature>().Size;
+                return 200 * food.GetComponent<Creature>().Size;
             } else
             {
                 return 200;

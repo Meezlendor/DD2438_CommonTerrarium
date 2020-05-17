@@ -33,7 +33,10 @@ namespace Assets.Scripts.CreatureBehaviour
         /// <inheritdoc cref="ISensor.SenseCreatures"/>
         public override List<GameObject> SenseCreatures(Creature me)
         {
-            return SenseTag(me,"creature");
+            List<GameObject> creatures = SenseTag(me, "herbivore");
+            creatures.AddRange(SenseTag(me, "carnivore"));
+
+            return creatures;
         }
 
         /// <inheritdoc cref="ISensor.SensePlants(Creature)"/>
@@ -45,14 +48,37 @@ namespace Assets.Scripts.CreatureBehaviour
         /// <inheritdoc cref="ISensor.SensePreys(Creature)"/>
         public override List<GameObject> SensePreys(Creature me)
         {
+            //return SenseTag(me, "herbivore");
             var neighbors = SenseCreatures(me);
-            var herbivorePreys = new List<GameObject>();
-            foreach(var neighbor in neighbors)
+            var preys = new List<GameObject>();
+            foreach (var neighbor in neighbors)
             {
                 if (neighbor.GetComponent<Creature>().Size < me.Size * 0.7f)
-                    herbivorePreys.Add(neighbor);
+                    preys.Add(neighbor);
             }
-            return herbivorePreys;
+            return preys;
+        }
+
+        /// <inheritdoc cref="ISensor.SenseCarnivores(Creature)"/>
+        public override List<GameObject> SenseCarnivores(Creature me)
+        {
+            return SenseTag(me, "carnivore");
+        }
+
+        /// <inheritdoc cref="ISensor.SensePredators(Creature)"/>
+        public override List<GameObject> SensePredators(Creature me)
+        {
+            //return SenseTag(me, "herbivore");
+            var neighbors = SenseCarnivores(me);
+            if (neighbors.Count != 0)
+                Debug.Log($"I am sensing {neighbors.Count} carnivores");
+            foreach (var neighbor in neighbors.ToList())
+            {
+                if (neighbor.GetComponent<Creature>().Size * 0.7 < me.Size)
+                    neighbors.Remove(neighbor);
+            }
+
+            return neighbors;
         }
 
 
