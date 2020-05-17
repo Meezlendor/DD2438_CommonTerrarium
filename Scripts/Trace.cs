@@ -124,7 +124,7 @@ namespace Assets.Scripts
                         continue;
                     }
                     var pos = GetVectorPos(i, j);
-                    Gizmos.color = new Color(danger[i,j]/10, food[i,j]/10, 0f);
+                    Gizmos.color = new Color(Mathf.Clamp(danger[i, j], 0f,1f), Mathf.Clamp(food[i,j],0f,1f), 0f);
                     Gizmos.DrawSphere(pos, 2);
                 }
             }
