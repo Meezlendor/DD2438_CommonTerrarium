@@ -17,8 +17,9 @@ namespace Assets.Scripts.CreatureBehaviour
             baby.Size = parent.Size;
             baby.MaxSpeed = parent.MaxSpeed;
             baby.CreatureRegime = parent.CreatureRegime;
-            baby.Sensor = new CircularSensorV2(parent.Sensor.SensingRadius);
+            baby.Sensor = new CircularSensor(parent.Sensor.SensingRadius);
             baby.MaxEnergy = parent.MaxEnergy;
+            baby.Generation = parent.Generation + 1;
         }
     }
 }

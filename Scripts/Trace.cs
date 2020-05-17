@@ -14,7 +14,7 @@ namespace Assets.Scripts
         [NonSerialized]
         public float[,] danger;
 
-        private float xMin, xMax, zMin, zMax;
+        public float xMin, xMax, zMin, zMax;
 
         public int nXCells, nZCells;
 
@@ -27,25 +27,6 @@ namespace Assets.Scripts
         {
             elapsedTime = 0;
             updateFrequency = updateFrequency == 0 ? 1f : updateFrequency;
-            foreach (var obj in GameObject.FindObjectsOfType<GameObject>())
-            {
-                if (obj.name == "mod_ground_forrest")
-                {
-                    Debug.Log($"I got {obj}");
-                    Bounds b = obj.GetComponent<MeshFilter>().mesh.bounds;
-                    Debug.Log($"Dims are : {b.min}, {b.center}, {b.max}");
-                    Debug.Log($"Parent's scale is {obj.transform.parent.transform.localScale} / ({obj.transform.parent.name})");
-                    Vector3 scale = obj.transform.parent.transform.localScale;
-                    xMin = b.min.x * scale.x;
-                    xMax = b.max.x * scale.x;
-                    zMin = b.min.z * scale.z;
-                    zMax = b.max.z * scale.z;
-                }
-                else
-                {
-                    Debug.Log($"Studying object : {obj}, {obj.name}");
-                }
-            }
             food = new float[nXCells, nZCells];
             danger = new float[nXCells, nZCells];
             for(int i=0; i<nXCells; i++)
