@@ -29,7 +29,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.25, z: 1}
   m_Center: {x: 0, y: 0.5, z: -0.1}
---- !u!114 &6440868056204771266
+--- !u!114 &543800887794798785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -38,28 +38,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8695400103245756455}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 480ed419dd9b37b448a4e6a570053a0f, type: 3}
+  m_Script: {fileID: 11500000, guid: 46d21e4ec2a84e34994243339e2cbfad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  specieName: PigAnt
-  specieID: 1
---- !u!114 &8699495404327243011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8695400103245756455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8581c345dce24bcdbcca5cb0d76e590, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialSize: 5
+  initialSize: 4
   initialRegime: 0
-  initialMaxEnergy: 1000
-  initialMaxSpeed: 20
-  initialSensingRadius: 30
+  initialMaxEnergy: 2000
+  initialMaxSpeed: 10
+  initialSensingRadius: 40
 --- !u!1001 &8694759087006593691
 PrefabInstance:
   m_ObjectHideFlags: 0
